@@ -12,7 +12,8 @@ export default defineConfig({
   use: {
     // Only the host comes from the environment; page objects own their paths.
     baseURL: process.env.BASE_URL ? new URL(process.env.BASE_URL).origin : undefined,
-    headless: false,
+    // Headed by default; set HEADLESS=1 for bulk or CI runs.
+    headless: process.env.HEADLESS === '1',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

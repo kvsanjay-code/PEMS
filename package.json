@@ -7,7 +7,10 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "report": "playwright show-report",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "rex:import": "tsx scripts/import-rex.ts",
+    "rex:status": "tsx scripts/rex-status.ts",
+    "bulk:horticulture": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/bulk-horticulture.ps1"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +20,7 @@
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.3",
     "dotenv": "^18.0.5",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }

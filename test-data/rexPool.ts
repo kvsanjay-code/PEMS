@@ -10,7 +10,8 @@ const POOL_FILE = process.env.REX_POOL_FILE ?? path.join(__dirname, 'rex-pool.js
 const LOCK_FILE = `${POOL_FILE}.lock`;
 const LOCK_TIMEOUT_MS = 10_000;
 
-export type InspectionType = 'Horticulture' | 'Grain';
+export const INSPECTION_TYPES = ['Horticulture', 'Grain'] as const;
+export type InspectionType = (typeof INSPECTION_TYPES)[number];
 
 type RexEntry = {
   rex: string;
@@ -22,6 +23,7 @@ type RexEntry = {
 };
 
 function readPool(): RexEntry[] {
+  if (!fs.existsSync(POOL_FILE)) return [];
   return JSON.parse(fs.readFileSync(POOL_FILE, 'utf8'));
 }
 
@@ -96,4 +98,39 @@ export function releaseIfUnused(rex: string): boolean {
     released = true;
   });
   return released;
+}
+
+const REX_PATTERN = /^REX\d+$/;
+
+/** Adds REX numbers to the pool as unused, skipping ones already present (any type). */
+export function addRexNumbers(type: InspectionType, rexNumbers: string[]) {
+  return withPoolLock(() => {
+    const pool = readPool();
+    const known = new Set(pool.map(e => e.rex));
+    const result = { added: [] as string[], alreadyInPool: [] as string[], invalid: [] as string[] };
+    for (const raw of rexNumbers) {
+      const rex = raw.trim().toUpperCase();
+      if (!rex) continue;
+      if (!REX_PATTERN.test(rex)) result.invalid.push(raw.trim());
+      else if (known.has(rex)) result.alreadyInPool.push(rex);
+      else {
+        pool.push({ rex, type, used: false });
+        known.add(rex);
+        result.added.push(rex);
+      }
+    }
+    writePool(pool);
+    return result;
+  });
+}
+
+/** Counts of unused and used REX numbers per type. */
+export function poolSummary(): Record<InspectionType, { unused: number; used: number }> {
+  const pool = readPool();
+  return Object.fromEntries(
+    INSPECTION_TYPES.map(type => {
+      const ofType = pool.filter(e => e.type === type);
+      return [type, { unused: ofType.filter(e => !e.used).length, used: ofType.filter(e => e.used).length }];
+    }),
+  ) as Record<InspectionType, { unused: number; used: number }>;
 }

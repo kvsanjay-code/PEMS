@@ -6,3 +6,4 @@ playwright-report/
 test-data/rex-pool.json
 .auth/
 recordings/
+test-data/*.txt
