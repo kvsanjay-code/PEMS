@@ -10,6 +10,8 @@ department's Self Service portal.
 
 > **Every run that reaches *Create* spends one REX number.** A REX can only create one inspection.
 
+How this was built, environment findings and design decisions: [docs/PROJECT-HISTORY.md](docs/PROJECT-HISTORY.md).
+
 ---
 
 ## Setup (fresh clone)
