@@ -1,6 +1,5 @@
 import { test } from '../fixtures/pages.fixture';
 import { horticultureInspection as data } from '../test-data/horticulture';
-import { getRexNumber, markRexUsed } from '../test-data/rexPool';
 
 const username = process.env.APP_USERNAME!;
 const password = process.env.APP_PASSWORD!;
@@ -8,6 +7,8 @@ const password = process.env.APP_PASSWORD!;
 const IDLE_BEFORE_LOGOUT_MS = 10_000;
 
 test.describe('PEMS happy path - Horticulture inspection', () => {
+  test.use({ rexType: 'Horticulture' });
+
   test.beforeAll(() => {
     if (!username || !password) {
       throw new Error('APP_USERNAME and APP_PASSWORD must be set in .env');
@@ -23,10 +24,9 @@ test.describe('PEMS happy path - Horticulture inspection', () => {
     timeEntryPage,
     rexPage,
     logoutPage,
+    rex,
   }) => {
     test.setTimeout(5 * 60_000);
-    const rex = getRexNumber('Horticulture');
-    test.info().annotations.push({ type: 'REX', description: rex });
 
     await test.step('Log in', async () => {
       await loginPage.goto();
@@ -39,12 +39,11 @@ test.describe('PEMS happy path - Horticulture inspection', () => {
       await pemsHomePage.expectLoaded();
     });
 
-    await test.step(`Create Horticulture inspection for ${rex}`, async () => {
+    await test.step(`Create Horticulture inspection for ${rex.number}`, async () => {
       const dialog = await pemsHomePage.openCreateHorticulture();
-      await dialog.createWithRex(rex);
-      const inspectionId = await inspectionPage.inspectionId();
-      markRexUsed(rex, inspectionId);
-      test.info().annotations.push({ type: 'Inspection ID', description: inspectionId });
+      rex.markCreateAttempted();
+      await dialog.createWithRex(rex.number);
+      rex.recordInspection(await inspectionPage.inspectionId());
       await inspectionPage.expectStatus('Active');
     });
 
@@ -74,7 +73,7 @@ test.describe('PEMS happy path - Horticulture inspection', () => {
     });
 
     await test.step('Request authorisation of the REX', async () => {
-      await rexPage.search(rex);
+      await rexPage.search(rex.number);
       await rexPage.requestAuthorisation();
     });
 

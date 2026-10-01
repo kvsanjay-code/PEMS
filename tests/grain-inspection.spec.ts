@@ -1,5 +1,4 @@
 import { test } from '../fixtures/pages.fixture';
-import { getRexNumber, markRexUsed } from '../test-data/rexPool';
 
 const username = process.env.APP_USERNAME!;
 const password = process.env.APP_PASSWORD!;
@@ -7,6 +6,8 @@ const password = process.env.APP_PASSWORD!;
 const IDLE_BEFORE_LOGOUT_MS = 10_000;
 
 test.describe('PEMS happy path - Grain and Plant Product inspection', () => {
+  test.use({ rexType: 'Grain' });
+
   test.beforeAll(() => {
     if (!username || !password) {
       throw new Error('APP_USERNAME and APP_PASSWORD must be set in .env');
@@ -22,10 +23,9 @@ test.describe('PEMS happy path - Grain and Plant Product inspection', () => {
     pemsHomePage,
     inspectionPage,
     logoutPage,
+    rex,
   }) => {
     test.setTimeout(5 * 60_000);
-    const rex = getRexNumber('Grain');
-    test.info().annotations.push({ type: 'REX', description: rex });
 
     await test.step('Log in', async () => {
       await loginPage.goto();
@@ -38,12 +38,11 @@ test.describe('PEMS happy path - Grain and Plant Product inspection', () => {
       await pemsHomePage.expectLoaded();
     });
 
-    await test.step(`Create Grain and Plant Product inspection for ${rex}`, async () => {
+    await test.step(`Create Grain and Plant Product inspection for ${rex.number}`, async () => {
       const dialog = await pemsHomePage.openCreateGrain();
-      await dialog.createWithRex(rex);
-      const inspectionId = await inspectionPage.inspectionId();
-      markRexUsed(rex, inspectionId);
-      test.info().annotations.push({ type: 'Inspection ID', description: inspectionId });
+      rex.markCreateAttempted();
+      await dialog.createWithRex(rex.number);
+      rex.recordInspection(await inspectionPage.inspectionId());
       await inspectionPage.expectStatus('Active');
     });
 
