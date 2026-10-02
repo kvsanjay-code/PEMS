@@ -1,0 +1,4 @@
+# Copy to users.txt (kept out of git) and list one login (email or Client ID) per line.
+# Lines starting with # and blank lines are ignored. All users share APP_PASSWORD from .env.
+first.user@example.com
+second.user@example.com

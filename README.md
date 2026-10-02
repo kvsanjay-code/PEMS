@@ -6,6 +6,7 @@ config and README. Run its commands from inside its folder.
 | Project | What it tests | Stack |
 |---|---|---|
 | [PEMS](PEMS/README.md) | Plant Exports Management System: Horticulture (and later Grain) inspection happy paths | Playwright + TypeScript, Page Object Model |
+| [ClientPortal](ClientPortal/README.md) | Client Portal happy paths | Playwright + TypeScript, Page Object Model |
 
 ## Getting started
 

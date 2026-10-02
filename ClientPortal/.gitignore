@@ -1,0 +1,12 @@
+node_modules/
+.env
+test-results/
+playwright-report/
+*.png
+.auth/
+recordings/
+results/
+dist/
+ms-playwright/
+test-data/users.txt
+test-data/users.csv
