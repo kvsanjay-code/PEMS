@@ -4,7 +4,7 @@ How this test suite was built, what was learned about the PEMS environment along
 code looks the way it does. Read this before changing the REX handling, the login flow or `BasePage`.
 For setup and run commands, see the [README](../README.md).
 
-Built 1–2 October 2026, step by step: each page was explored, its page object was proposed and approved,
+Built 1â€“2 October 2026, step by step: each page was explored, its page object was proposed and approved,
 then implemented and run against the vendor test environment.
 
 ---
@@ -16,7 +16,7 @@ then implemented and run against the vendor test environment.
 | Horticulture inspection happy path | Complete and passing, including 2 inspections created in parallel |
 | Grain and Plant Product happy path | Scaffolded and skipped (`test.fixme`): login, create and logout work, the inspection-detail steps still need recording |
 | Parallel and bulk runs | REX pool with locking, `bulk-horticulture.ps1` helper, verified with 6 parallel logins |
-| Repository | `github.com/kvsanjay-code/PEMS`, `main` branch |
+| Repository | `github.com/kvsanjay-code/Automation`, folder `PEMS/`, `main` branch (moved from the original `PEMS` repo on 2 October 2026, history kept) |
 
 ### How the Horticulture flow was captured
 1. Login, Home and PEMS pages were explored with scripted Playwright snapshots.
@@ -45,7 +45,7 @@ then implemented and run against the vendor test environment.
 - **Symptom:** 1 of 18 logins failed with the splash stuck, during a run of 6 parallel browsers.
 - **Cause:** ADF shows the splash again if more than 300 ms pass between two of its inline scripts. That
   gap includes downloading ADF's JavaScript files, which is slower when several browsers start together.
-- **Reproduced:** delaying `.js` responses by 1 s failed 3 of 3 runs. Delaying CSS or slowing the CPU 20×
+- **Reproduced:** delaying `.js` responses by 1 s failed 3 of 3 runs. Delaying CSS or slowing the CPU 20Ã—
   did not reproduce it.
 - **Fix:** the same init script keeps `window.AdfSplashHideTime` permanently unset, so the re-show check
   never fires.
