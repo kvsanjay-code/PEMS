@@ -29,7 +29,7 @@ copy .env.example .env   # then fill in BASE_URL, APP_USERNAME, APP_PASSWORD
 
 ## Bulk run: many users, one password
 
-1. Put the logins (email or Client ID) in `test-data\users.txt`, one per line — see `users.example.txt`.
+1. Put the logins (email or Client ID) in `test-data\users.txt`, one per line. Blank lines and lines starting with `#` are ignored.
    A `.csv` with a header row also works: the `username` / `email` / `login` column is used, otherwise the first.
    From Excel, use **Save As → CSV**. User lists are never committed or exported.
 2. Set the shared password as `APP_PASSWORD` in `.env` (`APP_USERNAME` is not used by the bulk run).
