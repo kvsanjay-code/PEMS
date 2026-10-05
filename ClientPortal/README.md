@@ -47,7 +47,7 @@ npm run test:bulk -- -UsersFile .\results\<run>\failed-users.txt   # re-check on
 | `-UsersFile` | `test-data\users.txt` | User list (.txt or .csv) |
 | `-Workers` | 1 | Users checked at the same time. Raise carefully: many parallel logins can trip the sign-in service. |
 | `-Limit` | 0 (all) | Only check the first N users |
-| `-IdleSeconds` | 0 | Wait on the Services page before signing out |
+| `-IdleSeconds` | 3 | Wait on the Services page before signing out (`-IdleSeconds 0` for none) |
 | `-Retries` | 1 | Extra attempts for a failing user, so a passing glitch doesn't list them as failed |
 | `-Headed` | off | Show the browsers |
 
@@ -63,7 +63,7 @@ Example reasons: `Login rejected (OAM-2): An incorrect Username or Password was 
 `Expected: "…You have no active requests" | Received: "…You have 2 active requests"`.
 Screenshots, videos and traces for failures are in the HTML report (`npm run report`).
 
-Timing: about 5 seconds per user, so 200 users take roughly 17 minutes with one worker.
+Timing: about 8 seconds per user (including the 3-second wait), so 200 users take roughly 27 minutes with one worker.
 
 ## Moving to another machine
 

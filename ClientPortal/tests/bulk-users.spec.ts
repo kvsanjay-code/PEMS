@@ -15,8 +15,8 @@ try {
   userListError = (error as Error).message;
 }
 
-// No wait by default so 200 users finish quickly; set BULK_IDLE_MS (or -IdleSeconds) to add one.
-const IDLE_BEFORE_LOGOUT_MS = Number(process.env.BULK_IDLE_MS ?? 0);
+// Short wait on the Services page before signing out; change with BULK_IDLE_MS (or -IdleSeconds).
+const IDLE_BEFORE_LOGOUT_MS = Number(process.env.BULK_IDLE_MS ?? 3_000);
 
 test.describe('Client Portal bulk check - Service Request History', () => {
   test.beforeAll(() => {

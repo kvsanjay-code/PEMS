@@ -16,7 +16,7 @@ param(
   # Only check the first N users (0 = all).
   [int]$Limit = 0,
   # Seconds to wait on the Services page before signing out.
-  [int]$IdleSeconds = 0,
+  [int]$IdleSeconds = 3,
   # Extra attempts for a user who fails, to rule out a passing glitch.
   [int]$Retries = 1,
   # Show the browsers.
